@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models
+  http://axelor.com/xml/ns/domain-models/domain-models_5.4.xsd">
+
+  <module name="axelor-student-details" package="com.axelor.studentdetails.db" />
+
+  <entity name="Results" cacheable="true">
+ <many-to-one name="details" ref="Details" required="true" />
+    <string name="subcode" required="true" max="255" />
+    <string name="subname" max="255" />
+    <string name="marks" />
+  </entity>
+
+</domain-models>

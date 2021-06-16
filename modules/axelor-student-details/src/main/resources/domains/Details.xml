@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models
+  http://axelor.com/xml/ns/domain-models/domain-models_5.4.xsd">
+
+  <module name="axelor-student-details" package="com.axelor.studentdetails.db" />
+<sequence name="student.detail.sequence" initial="1" increment="1" padding="5" prefix="Student"/>
+  <entity name="Details">
+    <string name="sno" sequence="student.details.sequence"/>
+    <string name="usn" required="true" />
+    <string name="fullName" required="true" />
+    <date name="dateOfBirth" />
+    <string name="email" required="true" unique="true" max="100" />
+    <string name="phone" max="10"/>
+    <one-to-many name="addresses" ref="Address" mappedBy="details" />
+    <one-to-many name="results" ref="Results" mappedBy="details" />
+
+    <finder-method name="findByName" using="fullName" />
+    <finder-method name="findByUSN" using="usn" />
+  </entity>
+
+</domain-models>

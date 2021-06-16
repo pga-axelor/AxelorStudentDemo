@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+
+  <grid name="detail-grid" title="axelor-student-details"
+    model="com.axelor.studentdetails.db.Details" canEdit="false" groupBy="dateOfBirth">
+    <toolbar>
+    <button name="btnPrint" icon="fa-print" title="Print" onClick="act1"/>
+    <button name="btnExport" icon="fa-rocket" title="Export" onClick="act2"/>
+  </toolbar>
+  <menubar>
+  <menu title="Action">
+   <item action="student-add-new" title="Add New Record"/>
+    <item action="student.all" title="View in New Tab"/>
+  </menu>
+  </menubar>
+
+     <hilite background="warning" if="$contains(email, 'gmeil.com')" />
+    <field name="usn" />
+    <field name="fullName" />
+    <field name="email" />
+    <field name="phone" />
+    <field name="dateOfBirth" />
+  </grid>
+  <cards name="details-cards" title="Student" model="com.axelor.studentdetails.db.Details" orderBy="fullName">
+    <field name="usn" />
+    <field name="fullName" />
+    <field name="email" />
+    <field name="phone" />
+    <field name="dateOfBirth" />
+  <field name="hasImage" />
+  <template><![CDATA[
+  <div class="span4 card-image">
+    <img src="img/user.png">
+    <strong>{{usn}}</strong>
+     <strong>{{email}}</strong>
+      <strong>{{phone}}</strong>
+       <strong>{{dateOfBirth}}</strong>
+
+  </div>
+  ]]></template>
+</cards>
+
+  <form name="detail-form" title="axelor-student-details"
+    model="com.axelor.studentdetails.db.Details" onNew="action-deatail-attrs-default-dob" onSave="action-dateOfBrith-validate,action-marks-validate">
+    <panel title="New Student Details" editable="true">
+     <field name="usn"/>
+      <field name="fullName" />
+      <field name="dateOfBirth" />
+      <field name="email">
+        <viewer><![CDATA[
+        <a href="mailto:{{record.email}}">{{record.email}}</a>
+        ]]></viewer>
+      </field>
+      <field name="phone">
+        <viewer><![CDATA[
+        <a href="tel:{{record.phone}}">{{record.phone}}</a>
+        ]]></viewer>
+      </field>
+      <button onClick="action-detail-method" name="btn" title="Get Full USN"/>
+    </panel>
+    <panel-related field="addresses"
+      form-view="address-form-popup">
+      <field name="street" />
+      <field name="city" />
+      <field name="state" />
+      <field name="zip" />
+      <field name="country" />
+    </panel-related>
+
+    <panel-related field="results"
+      form-view="results-form-popup">
+      <field name="subcode" />
+      <field name="subname" />
+      <field name="marks" />
+    </panel-related>
+
+
+    <panel sidebar="true">
+      <field name="createdOn" />
+      <field name="createdBy" />
+      <field name="updatedOn" />
+      <field name="updatedBy" />
+    </panel>
+  </form>
+
+
+  <form name="address-form-popup" title="Address"
+    model="com.axelor.studentdetails.db.Address">
+    <panel title="Overview-address">
+      <field name="street" />
+      <field name="area" />
+      <field name="city" />
+      <field name="zip" />
+      <field name="state" />
+      <field name="country" />
+    </panel>
+  </form>
+
+
+  <form name="results-form-popup" title="Results"
+    model="com.axelor.studentdetails.db.Results" onNew="action-detail-attrs-$total">
+    <panel title="Overview-result">
+      <field name="subcode" />
+      <field name="subname" />
+      <field name="marks"/>
+      <field name="$total" title="Out of"/>
+    </panel>
+  </form>
+
+  <action-view name="student-add-new"
+    title="Details"
+    model="com.axelor.studentdetails.db.Details">
+     <view type="form" name="detail-form"/>
+    </action-view>
+<action-attrs name="action-deatail-attrs-default-dob">
+<attribute name="value" for="dateOfBirth" expr="eval:__date__"/>
+</action-attrs>
+
+<action-attrs name="action-detail-attrs-$total">
+<attribute name="value" for="$total" expr="eval:'100'"/>
+</action-attrs>
+
+<action-validate name="action-dateOfBrith-validate">
+  <error message="Enter proper Date of Brith" if="dateOfBirth &gt; __date__" action="action-set-empty-dateOfBrith"/>
+</action-validate>
+
+    <action-record name="action-set-empty-dateOfBrith" model="com.axelor.studentdetails.db.Details">
+     <field name="dateOfBirth" expr="eval:null"/>
+  </action-record>
+<action-method name="action-detail-method">
+<call class="com.axelor.student.web.StudentController" method="detailMethod"/>
+</action-method>
+
+</object-views>
